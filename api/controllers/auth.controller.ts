@@ -1,25 +1,107 @@
-import bcryptjs from 'bcryptjs';
-import console from 'console';
-import { Request, Response } from 'express';
-import User from '../models/user.model';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
+import createHttpError from 'http-errors';
+// import User from '../models/user';
+import bcrypt from 'bcryptjs';
+import UserModel from '../models/user';
+interface SignUpBody {
+  email?: string;
+  password?: string;
+  phone?: string;
+}
+interface SignInBody {
+  email?: string;
+  password?: string;
+}
 
-export const signup = async (req: Request, res: Response) => {
-  const user = {
-    email: req.body.email,
-    password: req.body.password,
-    phone: req.body.phone,
-  };
-  console.log(user);
-  const hashedPassword = await bcryptjs.hashSync(user.password, 10);
-  const newUser = new User({
-    email: user.email,
-    password: hashedPassword,
-    phone: user.phone,
-  });
+export const getAuthenticatedUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    // await newUser.save();
-    res.status(201).send('User created successfully');
+    const user = await UserModel.findById(req.session.userId)
+      .select('+email')
+      .exec();
+    res.status(200).json(user);
   } catch (error) {
-    res.status(500).send(error);
+    next(error);
   }
+};
+
+export const SignUp: RequestHandler<
+  unknown,
+  unknown,
+  SignUpBody,
+  unknown
+> = async (req, res, next) => {
+  const email = req.body.email;
+  const passwordRaw = req.body.password;
+  const phone = req.body.phone;
+  try {
+    if (!email || !passwordRaw || !phone) {
+      throw createHttpError(400, 'Parameters missing');
+    }
+
+    const existingEmail = await UserModel.findOne({ email: email }).exec();
+    if (existingEmail) {
+      throw createHttpError(409, 'Email already exists');
+    }
+    const existingPhone = await UserModel.findOne({ phone: phone }).exec();
+    if (existingPhone) {
+      throw createHttpError(409, 'Phone already exists');
+    }
+    const passwordHashed = await bcrypt.hash(passwordRaw, 10);
+    const newUser = await UserModel.create({
+      email: email,
+      password: passwordHashed,
+      phone: phone,
+    });
+
+    req.session.userId = newUser._id;
+    res.status(201).json(newUser);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const SignIn: RequestHandler<
+  unknown,
+  unknown,
+  SignInBody,
+  unknown
+> = async (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  try {
+    if (!email || !password) {
+      throw createHttpError(400, 'Parameters missing');
+    }
+    const user = await UserModel.findOne({ email: email })
+      .select('+password +phone')
+      .exec();
+    if (!user) {
+      throw createHttpError(401, 'Invalid credentials');
+    }
+    const passwordValid = await bcrypt.compare(password, user.password);
+    if (!passwordValid) {
+      throw createHttpError(401, 'Invalid credentials');
+    }
+
+    req.session.userId = user._id;
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const SignOut: RequestHandler = async (req, res, next) => {
+  req.session.destroy((error) => {
+    if (error) {
+      return next(error);
+    } else {
+      res.sendStatus(200);
+    }
+    // res.clearCookie('connect.sid').status(200).json({ message: 'Signed out' });
+  });
 };

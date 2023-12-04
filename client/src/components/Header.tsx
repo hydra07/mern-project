@@ -1,14 +1,15 @@
 import { Link } from 'react-router-dom';
-
+import UserButton from './UserButton';
 const Header = () => {
   return (
-    <header className="bg-opacity-50 backdrop-blur-lg bg-gray-700 text-white py-4 fixed w-full z-10">
-      <div className="container mx-auto shadow-sm">
-        <nav className="flex justify-between items-center max-w-6xl mx-auto p-3">
-          <Link to="/">Home</Link>
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Register</Link>
+    <header className="bg-gray-700 bg-opacity-50 backdrop-blur-lg text-white py-4 fixed w-full z-10">
+      <div className="container mx-auto shadow-sm flex justify-between items-center">
+        <nav className="max-w-6xl p-3">
+          <Link to="/" className="text-white">
+            Home
+          </Link>
         </nav>
+        <UserButton />
       </div>
     </header>
   );

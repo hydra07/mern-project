@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import OAuth from '../components/OAuth';
 import { AppDispatch } from '../redux/store';
+import { login } from '../redux/user/userSlice';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,10 +11,13 @@ const Login = () => {
   });
 
   const dispastch = useDispatch<AppDispatch>();
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(formData);
+    await console.log(dispastch(login(formData)));
+    // console.log(formData);
   };
 
   return (
@@ -38,9 +42,7 @@ const Login = () => {
                 autoComplete="email"
                 required
                 value={formData.email}
-                onChange={(event) =>
-                  setFormData({ ...formData, email: event.target.value })
-                }
+                onChange={handleChange}
                 className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
@@ -61,9 +63,7 @@ const Login = () => {
                 autoComplete="current-password"
                 required
                 value={formData.password}
-                onChange={(event) =>
-                  setFormData({ ...formData, password: event.target.value })
-                }
+                onChange={handleChange}
                 className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
