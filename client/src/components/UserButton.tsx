@@ -9,7 +9,7 @@ const UserButton = () => {
 
   return (
     <div className="flex items-center justify-end">
-      {user ? (
+      {user && user.email ? (
         <div className="flex items-center">
           <div className="text-gray-700 text-sm mr-2">
             Welcome, {user.email}
@@ -22,7 +22,7 @@ const UserButton = () => {
           </button>
         </div>
       ) : (
-        <div>
+        <div className="flex">
           <button className="bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-3 rounded mr-2">
             <Link to="/login">Login</Link>
           </button>

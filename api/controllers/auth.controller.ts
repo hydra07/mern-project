@@ -58,7 +58,10 @@ export const SignUp: RequestHandler<
     });
 
     req.session.userId = newUser._id;
-    res.status(201).json(newUser);
+    res.status(201).json({
+      message: 'Created new user successfully',
+      user: newUser,
+    });
   } catch (error) {
     next(error);
   }
@@ -81,11 +84,11 @@ export const SignIn: RequestHandler<
       .select('+password +phone')
       .exec();
     if (!user) {
-      throw createHttpError(401, 'Invalid credentials');
+      throw createHttpError(401, 'User not found');
     }
     const passwordValid = await bcrypt.compare(password, user.password);
     if (!passwordValid) {
-      throw createHttpError(401, 'Invalid credentials');
+      throw createHttpError(401, 'Wrong password');
     }
 
     req.session.userId = user._id;
@@ -100,7 +103,8 @@ export const SignOut: RequestHandler = async (req, res, next) => {
     if (error) {
       return next(error);
     } else {
-      res.sendStatus(200);
+      // res.sendStatus(200).json({ message: 'Signed out' });
+      res.status(200).json({ message: 'Signed out' });
     }
     // res.clearCookie('connect.sid').status(200).json({ message: 'Signed out' });
   });

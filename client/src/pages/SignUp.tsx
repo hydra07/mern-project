@@ -1,7 +1,8 @@
 import { useState } from 'react';
 // import OAuth from '../components/OAuth';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
+import { useDispatch } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import { AppDispatch } from '../redux/store';
 import { register } from '../redux/user/userSlice';
 export const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -10,8 +11,6 @@ export const SignUp = () => {
     phone: '',
   });
   const dispatch = useDispatch<AppDispatch>();
-  // const navigate = useNavigate();
-  const message = useSelector((state: RootState) => state.user.message);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
@@ -23,7 +22,6 @@ export const SignUp = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg max-w-md w-full animate-fadeIn">
-        {message && <div className="">{JSON.stringify(message)}</div>}
         <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-6">
           Sign up
         </h2>
@@ -101,6 +99,7 @@ export const SignUp = () => {
             </button>
           </div>
         </form>
+        <ToastContainer />
       </div>
     </div>
   );

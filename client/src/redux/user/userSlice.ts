@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { User, UserState } from '../interface';
 const api = 'http://localhost:8000/api/';
 
@@ -7,41 +8,84 @@ const initialState: UserState = {
   currentUser: null,
   loading: false,
   message: null,
+  error: null,
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    clearError: (state) => {
+      state.error = null;
+    },
+    showError: (state) => {
+      if (state.error) {
+        toast.error(state.error);
+        console.log(state.error);
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(register.pending, () => {
-        // state.loading = true;
-        console.log('pending action register');
+      //-----------register--------------
+      .addCase(register.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.message = null;
       })
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentUser = action.payload as User;
-        state.message = action.payload;
+        state.currentUser = action.payload.user as User;
+        state.message = JSON.parse(JSON.stringify(action.payload)).message;
+        if (state.message) {
+          toast.success(state.message);
+        }
       })
-      .addCase(login.pending, () => {
-        // state.loading = true;
-        console.log('pending action login');
+      .addCase(register.rejected, (state, action) => {
+        state.loading = false;
+        state.error = JSON.parse(JSON.stringify(action.payload)).error;
+        if (state.error) {
+          toast.error(state.error);
+        }
+      })
+      //-----------login--------------
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.message = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.currentUser = action.payload as User;
-        console.log(state.currentUser);
-        state.message = action.payload;
       })
-      .addCase(logout.pending, () => {
-        // state.loading = true;
-        console.log('pending action logout');
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = JSON.parse(JSON.stringify(action.payload)).error;
+        if (state.error) {
+          toast.error(state.error);
+        }
+      })
+      //-----------logout--------------
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.message = null;
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.loading = false;
         state.currentUser = null;
-        state.message = action.payload;
+        state.message = JSON.parse(JSON.stringify(action.payload)).message;
+        console.log(state.message);
+        if (state.message) {
+          toast.success(state.message);
+        }
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.loading = false;
+        state.error = JSON.parse(JSON.stringify(action.payload)).error;
+        if (state.error) {
+          toast.error(state.error);
+        }
       });
   },
 });
@@ -49,9 +93,7 @@ export const register = createAsyncThunk(
   'user/register',
   async (user: User, { rejectWithValue }) => {
     try {
-      // console.log('user', user);
       const response = await axios.post(`${api}users/signup`, user);
-      // console.log('response', response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -63,8 +105,6 @@ export const login = createAsyncThunk(
   async (user: User, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${api}users/signin`, user);
-      console.log('response', response.data);
-
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -82,6 +122,6 @@ export const logout = createAsyncThunk(
     }
   },
 );
-export const {} = userSlice.actions;
+export const { clearError, showError } = userSlice.actions;
 
 export default userSlice.reducer;

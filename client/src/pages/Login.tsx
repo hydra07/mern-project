@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import OAuth from '../components/OAuth';
 import { AppDispatch } from '../redux/store';
 import { login } from '../redux/user/userSlice';
-
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-
   const dispastch = useDispatch<AppDispatch>();
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -17,16 +17,14 @@ const Login = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await console.log(dispastch(login(formData)));
-    // console.log(formData);
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg max-w-md w-full animate-fadeIn">
         <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-6">
           Sign in
         </h2>
-        <form className="space-y-6" onSubmit={(even) => handleSubmit(even)}>
+        <form className="space-y-6" onSubmit={(event) => handleSubmit(event)}>
           <div>
             <label
               htmlFor="email"
@@ -107,6 +105,7 @@ const Login = () => {
             </button>
           </div>
         </form>
+        <ToastContainer />
       </div>
     </div>
   );
