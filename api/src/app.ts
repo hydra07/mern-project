@@ -36,7 +36,6 @@ app.use(
 
 app.use('/', indexRouter);
 app.use('/api/users', authRouter);
-
 app.use((res, req, next) => {
   next(createHttpError(404, 'Not found'));
 });

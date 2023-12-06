@@ -11,7 +11,7 @@ const UserButton = () => {
     <div className="flex items-center justify-end">
       {user && user.email ? (
         <div className="flex items-center">
-          <div className="text-gray-700 text-sm mr-2">
+          <div className="text-gray-300 text-sm mr-2">
             Welcome, {user.email}
           </div>
           <button

@@ -4,6 +4,8 @@ export interface UserType {
   email: string;
   password: string;
   phone?: string | null;
+  avatar?: string | null;
+  address?: string | null;
 }
 export interface UserDocument extends UserType, Document {
   createdAt: Date;
@@ -27,6 +29,14 @@ const userSchema = new Schema(
       required: false,
       max: 11,
       min: 10,
+    },
+    avatar: {
+      type: String,
+      required: false,
+    },
+    address: {
+      type: String,
+      required: false,
     },
   },
   { timestamps: true },

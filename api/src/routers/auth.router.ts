@@ -3,13 +3,14 @@ import {
   SignIn,
   SignOut,
   SignUp,
-  getAuthenticatedUser,
+  google,
 } from '../controllers/auth.controller';
 
 const router = express.Router();
 
-router.get('/', getAuthenticatedUser);
 router.post('/signup', SignUp);
 router.post('/signin', SignIn);
+router.post('/google', google);
 router.get('/signout', SignOut);
+// router.get('/profile', requiresAuth, getAuthenticatedUser);
 export default router;

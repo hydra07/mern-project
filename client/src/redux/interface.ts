@@ -1,7 +1,9 @@
 export interface User {
-  email: string;
-  password: string;
+  email: string | null;
+  password?: string | null;
   phone?: string | null;
+  avatar?: string | null;
+  address?: string | null;
 }
 export interface UserState {
   currentUser: User | null;

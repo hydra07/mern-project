@@ -1,8 +1,8 @@
+import bcrypt from 'bcryptjs';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import createHttpError from 'http-errors';
-// import User from '../models/user';
-import bcrypt from 'bcryptjs';
 import UserModel from '../models/user';
+import { downloadImage } from '../utils/image';
 interface SignUpBody {
   email?: string;
   password?: string;
@@ -12,7 +12,6 @@ interface SignInBody {
   email?: string;
   password?: string;
 }
-
 export const getAuthenticatedUser = async (
   req: Request,
   res: Response,
@@ -20,7 +19,7 @@ export const getAuthenticatedUser = async (
 ) => {
   try {
     const user = await UserModel.findById(req.session.userId)
-      .select('+email')
+      .select('+email +phone +avatar +address')
       .exec();
     res.status(200).json(user);
   } catch (error) {
@@ -81,7 +80,7 @@ export const SignIn: RequestHandler<
       throw createHttpError(400, 'Parameters missing');
     }
     const user = await UserModel.findOne({ email: email })
-      .select('+password +phone')
+      .select('+password')
       .exec();
     if (!user) {
       throw createHttpError(401, 'User not found');
@@ -108,4 +107,33 @@ export const SignOut: RequestHandler = async (req, res, next) => {
     }
     // res.clearCookie('connect.sid').status(200).json({ message: 'Signed out' });
   });
+};
+
+export const google: RequestHandler = async (req, res, next) => {
+  const email = req.body.email;
+  try {
+    const user = await UserModel.findOne({ email: email }).exec();
+    if (user) {
+      req.session.userId = user._id;
+      res.status(200).json(user);
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const hashedPassword = await bcrypt.hash(generatedPassword, 10);
+      const newUser = await UserModel.create({
+        email: email,
+        password: hashedPassword,
+        // phone: req.body.phone,
+        avatar: await downloadImage(req.body.avatar, 'avatars', email),
+      });
+      req.session.userId = newUser._id;
+      res.status(201).json({
+        message: 'Created new user successfully',
+        user: newUser,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
 };

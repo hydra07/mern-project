@@ -1,10 +1,33 @@
+import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
+import { useDispatch } from 'react-redux';
+import app from '../firebase';
+import { User } from '../redux/interface';
+import { AppDispatch } from '../redux/store';
+import { google } from '../redux/user/userSlice';
 const OAuth = () => {
+  const dispastch = useDispatch<AppDispatch>();
+  const hanldeGoogleClick = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth(app);
+      const result = await signInWithPopup(auth, provider);
+      const data: User = {
+        email: result.user.email,
+        phone: result.user?.phoneNumber,
+        avatar: result.user?.photoURL,
+      };
+      dispastch(google(data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <button
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      onClick={hanldeGoogleClick}
       type="button"
-      className="bg-red-500 flex items-center px-4 py-2 rounded"
     >
-      Sign in with Google
+      Continue with Google
     </button>
   );
 };
