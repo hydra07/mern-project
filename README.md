@@ -2,7 +2,7 @@
 <h1 align="center">
 <img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-markdown-open.svg" width="100" />
 <br>MERN-PROJECT</h1>
-<h3>◦ HTTPStatus Exception: 404</h3>
+<!-- <h3>◦ HTTPStatus Exception: 404</h3> -->
 <h3>◦ Developed with the software and tools below.</h3>
 
 <p align="center">
@@ -36,7 +36,7 @@
 - [ Overview](#-overview)
 - [ Features](#-features)
 - [ repository Structure](#-repository-structure)
-- [ Modules](#modules)
+<!-- - [ Modules](#modules)
 - [ Getting Started](#-getting-started)
   - [ Installation](#-installation)
   - [ Running mern-project](#-running-mern-project)
@@ -44,19 +44,17 @@
 - [ Roadmap](#-roadmap)
 - [ Contributing](#-contributing)
 - [ License](#-license)
-- [ Acknowledgments](#-acknowledgments)
+- [ Acknowledgments](#-acknowledgments) -->
 
 ---
 
 ## Overview
 
-HTTPStatus Exception: 404
-
 ---
 
 ## Features
 
-HTTPStatus Exception: 404
+Updating...
 
 ---
 
@@ -103,14 +101,15 @@ HTTPStatus Exception: 404
 
 ```
 
----
+<!-- ---
 
-## Modules
+
+##  Modules
 
 <details closed><summary>Client</summary>
 
 | File                                                                                              | Summary                   |
-| ------------------------------------------------------------------------------------------------- | ------------------------- |
+| ---                                                                                               | ---                       |
 | [yarn.lock](https://github.com/hydra07/mern-project/blob/main/client/yarn.lock)                   | HTTPStatus Exception: 404 |
 | [index.html](https://github.com/hydra07/mern-project/blob/main/client/index.html)                 | HTTPStatus Exception: 404 |
 | [tsconfig.json](https://github.com/hydra07/mern-project/blob/main/client/tsconfig.json)           | HTTPStatus Exception: 404 |
@@ -126,7 +125,7 @@ HTTPStatus Exception: 404
 <details closed><summary>Src</summary>
 
 | File                                                                                        | Summary                   |
-| ------------------------------------------------------------------------------------------- | ------------------------- |
+| ---                                                                                         | ---                       |
 | [App.css](https://github.com/hydra07/mern-project/blob/main/client/src/App.css)             | HTTPStatus Exception: 404 |
 | [index.css](https://github.com/hydra07/mern-project/blob/main/client/src/index.css)         | HTTPStatus Exception: 404 |
 | [vite-env.d.ts](https://github.com/hydra07/mern-project/blob/main/client/src/vite-env.d.ts) | HTTPStatus Exception: 404 |
@@ -141,7 +140,7 @@ HTTPStatus Exception: 404
 <details closed><summary>Pages</summary>
 
 | File                                                                                          | Summary                   |
-| --------------------------------------------------------------------------------------------- | ------------------------- |
+| ---                                                                                           | ---                       |
 | [Home.tsx](https://github.com/hydra07/mern-project/blob/main/client/src/pages/Home.tsx)       | HTTPStatus Exception: 404 |
 | [Profile.tsx](https://github.com/hydra07/mern-project/blob/main/client/src/pages/Profile.tsx) | HTTPStatus Exception: 404 |
 | [Login.tsx](https://github.com/hydra07/mern-project/blob/main/client/src/pages/Login.tsx)     | HTTPStatus Exception: 404 |
@@ -152,7 +151,7 @@ HTTPStatus Exception: 404
 <details closed><summary>Utils</summary>
 
 | File                                                                                                | Summary                   |
-| --------------------------------------------------------------------------------------------------- | ------------------------- |
+| ---                                                                                                 | ---                       |
 | [validateEnv.ts](https://github.com/hydra07/mern-project/blob/main/client/src/utils/validateEnv.ts) | HTTPStatus Exception: 404 |
 | [validateEnv.ts](https://github.com/hydra07/mern-project/blob/main/api/src/utils/validateEnv.ts)    | HTTPStatus Exception: 404 |
 | [image.ts](https://github.com/hydra07/mern-project/blob/main/api/src/utils/image.ts)                | HTTPStatus Exception: 404 |
@@ -163,7 +162,7 @@ HTTPStatus Exception: 404
 <details closed><summary>Redux</summary>
 
 | File                                                                                            | Summary                   |
-| ----------------------------------------------------------------------------------------------- | ------------------------- |
+| ---                                                                                             | ---                       |
 | [message.ts](https://github.com/hydra07/mern-project/blob/main/client/src/redux/message.ts)     | HTTPStatus Exception: 404 |
 | [interface.ts](https://github.com/hydra07/mern-project/blob/main/client/src/redux/interface.ts) | HTTPStatus Exception: 404 |
 | [store.ts](https://github.com/hydra07/mern-project/blob/main/client/src/redux/store.ts)         | HTTPStatus Exception: 404 |
@@ -173,7 +172,7 @@ HTTPStatus Exception: 404
 <details closed><summary>User</summary>
 
 | File                                                                                                 | Summary                   |
-| ---------------------------------------------------------------------------------------------------- | ------------------------- |
+| ---                                                                                                  | ---                       |
 | [userSlice.ts](https://github.com/hydra07/mern-project/blob/main/client/src/redux/user/userSlice.ts) | HTTPStatus Exception: 404 |
 
 </details>
@@ -181,7 +180,7 @@ HTTPStatus Exception: 404
 <details closed><summary>Components</summary>
 
 | File                                                                                                     | Summary                   |
-| -------------------------------------------------------------------------------------------------------- | ------------------------- |
+| ---                                                                                                      | ---                       |
 | [OAuth.tsx](https://github.com/hydra07/mern-project/blob/main/client/src/components/OAuth.tsx)           | HTTPStatus Exception: 404 |
 | [Header.tsx](https://github.com/hydra07/mern-project/blob/main/client/src/components/Header.tsx)         | HTTPStatus Exception: 404 |
 | [DarkSwitch.tsx](https://github.com/hydra07/mern-project/blob/main/client/src/components/DarkSwitch.tsx) | HTTPStatus Exception: 404 |
@@ -192,7 +191,7 @@ HTTPStatus Exception: 404
 <details closed><summary>Api</summary>
 
 | File                                                                                 | Summary                   |
-| ------------------------------------------------------------------------------------ | ------------------------- |
+| ---                                                                                  | ---                       |
 | [yarn.lock](https://github.com/hydra07/mern-project/blob/main/api/yarn.lock)         | HTTPStatus Exception: 404 |
 | [tsconfig.json](https://github.com/hydra07/mern-project/blob/main/api/tsconfig.json) | HTTPStatus Exception: 404 |
 | [package.json](https://github.com/hydra07/mern-project/blob/main/api/package.json)   | HTTPStatus Exception: 404 |
@@ -202,7 +201,7 @@ HTTPStatus Exception: 404
 <details closed><summary>Models</summary>
 
 | File                                                                                | Summary                   |
-| ----------------------------------------------------------------------------------- | ------------------------- |
+| ---                                                                                 | ---                       |
 | [user.ts](https://github.com/hydra07/mern-project/blob/main/api/src/models/user.ts) | HTTPStatus Exception: 404 |
 
 </details>
@@ -210,7 +209,7 @@ HTTPStatus Exception: 404
 <details closed><summary>Middleware</summary>
 
 | File                                                                                    | Summary                   |
-| --------------------------------------------------------------------------------------- | ------------------------- |
+| ---                                                                                     | ---                       |
 | [auth.ts](https://github.com/hydra07/mern-project/blob/main/api/src/middleware/auth.ts) | HTTPStatus Exception: 404 |
 
 </details>
@@ -218,7 +217,7 @@ HTTPStatus Exception: 404
 <details closed><summary>Routers</summary>
 
 | File                                                                                                 | Summary                   |
-| ---------------------------------------------------------------------------------------------------- | ------------------------- |
+| ---                                                                                                  | ---                       |
 | [user.router.ts](https://github.com/hydra07/mern-project/blob/main/api/src/routers/user.router.ts)   | HTTPStatus Exception: 404 |
 | [index.router.ts](https://github.com/hydra07/mern-project/blob/main/api/src/routers/index.router.ts) | HTTPStatus Exception: 404 |
 | [auth.router.ts](https://github.com/hydra07/mern-project/blob/main/api/src/routers/auth.router.ts)   | HTTPStatus Exception: 404 |
@@ -228,7 +227,7 @@ HTTPStatus Exception: 404
 <details closed><summary>Controllers</summary>
 
 | File                                                                                                           | Summary                   |
-| -------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| ---                                                                                                            | ---                       |
 | [user.controller.ts](https://github.com/hydra07/mern-project/blob/main/api/src/controllers/user.controller.ts) | HTTPStatus Exception: 404 |
 | [auth.controller.ts](https://github.com/hydra07/mern-project/blob/main/api/src/controllers/auth.controller.ts) | HTTPStatus Exception: 404 |
 
@@ -237,16 +236,16 @@ HTTPStatus Exception: 404
 <details closed><summary>@types</summary>
 
 | File                                                                                      | Summary                   |
-| ----------------------------------------------------------------------------------------- | ------------------------- |
+| ---                                                                                       | ---                       |
 | [session.d.ts](https://github.com/hydra07/mern-project/blob/main/api/@types/session.d.ts) | HTTPStatus Exception: 404 |
 
 </details>
 
 ---
 
-## Getting Started
+##  Getting Started
 
-**_Dependencies_**
+***Dependencies***
 
 Please ensure you have the following dependencies installed on your system:
 
@@ -256,49 +255,47 @@ Please ensure you have the following dependencies installed on your system:
 
 `- ℹ️ ...`
 
-### Installation
+###  Installation
 
 1. Clone the mern-project repository:
-
 ```sh
 git clone https://github.com/hydra07/mern-project
 ```
 
 2. Change to the project directory:
-
 ```sh
 cd mern-project
 ```
 
 3. Install the dependencies:
-
 ```sh
 npm install
 ```
 
-### Running mern-project
+###  Running mern-project
 
 ```sh
 npm run build && node dist/main.js
 ```
 
-### Tests
-
+###  Tests
 ```sh
 npm test
 ```
 
 ---
 
-## Project Roadmap
 
-> - [x] `ℹ️  Task 1: Implement X`
+##  Project Roadmap
+
+> - [X] `ℹ️  Task 1: Implement X`
 > - [ ] `ℹ️  Task 2: Implement Y`
 > - [ ] `ℹ️ ...`
 
+
 ---
 
-## Contributing
+##  Contributing
 
 Contributions are welcome! Here are several ways you can contribute:
 
@@ -306,7 +303,7 @@ Contributions are welcome! Here are several ways you can contribute:
 - **[Join the Discussions](https://github.com/hydra07/mern-project/discussions)**: Share your insights, provide feedback, or ask questions.
 - **[Report Issues](https://github.com/hydra07/mern-project/issues)**: Submit bugs found or log feature requests for HYDRA07.
 
-#### _Contributing Guidelines_
+#### *Contributing Guidelines*
 
 <details closed>
 <summary>Click to expand</summary>
@@ -337,16 +334,18 @@ Once your PR is reviewed and approved, it will be merged into the main branch.
 
 ---
 
-## License
+##  License
+
 
 This project is protected under the [SELECT-A-LICENSE](https://choosealicense.com/licenses) License. For more details, refer to the [LICENSE](https://choosealicense.com/licenses/) file.
 
 ---
 
-## Acknowledgments
+##  Acknowledgments
 
 - List any resources, contributors, inspiration, etc. here.
 
 [**Return**](#Top)
 
 ---
+ -->
