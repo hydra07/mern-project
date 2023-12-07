@@ -1,9 +1,12 @@
-import { Document, InferSchemaType, Schema, model } from 'mongoose';
+import { Date, Document, InferSchemaType, Schema, model } from 'mongoose';
 
 export interface UserType {
+  name?: string | null;
+  username?: string;
   email: string;
   password: string;
   phone?: string | null;
+  birthday?: Date | null;
   avatar?: string | null;
   address?: string | null;
 }
@@ -13,6 +16,21 @@ export interface UserDocument extends UserType, Document {
 }
 const userSchema = new Schema(
   {
+    name: {
+      type: String,
+      required: false,
+      max: 50,
+    },
+    username: {
+      type: String,
+      required: false,
+      max: 50,
+      unique: true,
+    },
+    birthday: {
+      type: Date,
+      required: false,
+    },
     email: {
       type: String,
       required: true,

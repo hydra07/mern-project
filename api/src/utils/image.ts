@@ -10,17 +10,24 @@ export const downloadImage = async (
   const response = await axios.get(url, { responseType: 'arraybuffer' });
   const base64Data = Buffer.from(response.data, 'binary').toString('base64');
 
-  let uploadPath = path.join(__dirname, `../../uploads/${folder}/${name}.png`);
+  let uploadPath = path.join(
+    __dirname,
+    `../../../database/${folder}/${name}.png`,
+  );
   while (fs.existsSync(uploadPath)) {
     name = name + '-' + Date.now().toString();
-    uploadPath = path.join(__dirname, `../../uploads/${folder}/${name}.png`);
+    uploadPath = path.join(
+      __dirname,
+      `../../../database/${folder}/${name}.png`,
+    );
   }
   await fs.writeFile(uploadPath, base64Data, 'base64', (err) => {
     if (err) {
       throw err;
     }
   });
-  return `uploads/${folder}/${name}.png`;
+  // return `uploads/${folder}/${name}.png`;
+  return uploadPath;
 };
 
 /**
@@ -52,18 +59,24 @@ export const saveImage = async (
   name: string,
 ) => {
   const base64Data = image.replace(/^data:image\/png;base64,/, '');
-  let uploadPath = path.join(__dirname, `../../uploads/${folder}/${name}.png`);
+  let uploadPath = path.join(
+    __dirname,
+    `../../../database/${folder}/${name}.png`,
+  );
   while (fs.existsSync(uploadPath)) {
     name = name + '-' + Date.now().toString();
-    uploadPath = path.join(__dirname, `../../uploads/${folder}/${name}.png`);
+    uploadPath = path.join(
+      __dirname,
+      `../../../database/${folder}/${name}.png`,
+    );
   }
   await fs.writeFile(uploadPath, base64Data, 'base64', (err) => {
     if (err) {
       throw err;
     }
   });
-  return `uploads/${folder}/${name}.png`;
-  // return uploadPath;
+  // return `uploads/${folder}/${name}.png`;
+  return uploadPath;
 };
 
 /**
@@ -98,7 +111,7 @@ export const encodeImage = (
 
 //rename image if exists
 
-// let _path = path.join(__dirname, `../../uploads/avatars/demo.jpg`);
+let _path = path.join(__dirname, `../../../database/`);
 // // //using encode
 
 // encodeImage(_path, async (base64Image, err) => {
@@ -114,4 +127,19 @@ export const encodeImage = (
 //   }
 // });
 
-// saveImage(encodeImage(_path), 'avatars', 'demo!');
+//from download change img to base64
+export const imageToBase64 = async (url: string): Promise<string | null> => {
+  try {
+    const res = await axios.get(url, { responseType: 'arraybuffer' });
+    const buffer = Buffer.from(res.data, 'binary').toString('base64');
+    return buffer;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+const imgUrl =
+  'https://th.bing.com/th/id/OIP.aey5rCg-QObGBLVK9fUtSAHaEK?rs=1&pid=ImgDetMain';
+// const img = imageToBase64(imgUrl);
+console.log(imageToBase64(imgUrl));

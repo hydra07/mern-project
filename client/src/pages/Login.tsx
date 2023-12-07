@@ -8,7 +8,7 @@ import { AppDispatch, RootState } from '../redux/store';
 import { login } from '../redux/user/userSlice';
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: '',
   });
   const dispastch = useDispatch<AppDispatch>();
@@ -35,19 +35,19 @@ const Login = () => {
         <form className="space-y-6" onSubmit={(event) => handleSubmit(event)}>
           <div>
             <label
-              htmlFor="email"
+              htmlFor="username"
               className="block text-sm font-medium text-gray-700"
             >
-              Email address
+              Username
             </label>
             <div className="mt-1">
               <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
+                id="username"
+                name="username"
+                type="username"
+                autoComplete="username"
                 required
-                value={formData.email}
+                value={formData.username}
                 onChange={handleChange}
                 className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />

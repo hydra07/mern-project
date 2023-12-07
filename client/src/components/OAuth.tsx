@@ -12,11 +12,13 @@ const OAuth = () => {
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
       const data: User = {
-        email: result.user.email,
+        name: result.user?.displayName,
+        email: result.user?.email,
         phone: result.user?.phoneNumber,
         avatar: result.user?.photoURL,
       };
       dispastch(google(data));
+      console.log(data);
     } catch (error) {
       console.log(error);
     }

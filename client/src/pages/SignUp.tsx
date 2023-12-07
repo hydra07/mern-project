@@ -7,6 +7,7 @@ import { AppDispatch, RootState } from '../redux/store';
 import { register } from '../redux/user/userSlice';
 export const SignUp = () => {
   const [formData, setFormData] = useState({
+    username: '',
     email: '',
     password: '',
     phone: '',
@@ -34,6 +35,26 @@ export const SignUp = () => {
           Sign up
         </h2>
         <form className="space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Username
+            </label>
+            <div className="mt-1">
+              <input
+                id="username"
+                name="username"
+                type="username"
+                autoComplete="username"
+                required
+                value={formData.username}
+                onChange={handleChange}
+                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div>
           <div>
             <label
               htmlFor="email"
