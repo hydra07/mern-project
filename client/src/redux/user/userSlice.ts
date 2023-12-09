@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  isRejectedWithValue,
+} from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import env from '../../utils/validateEnv';
@@ -104,6 +108,31 @@ const userSlice = createSlice({
         if (state.error) {
           toast.error(state.error);
         }
+      })
+      //-----------profile--------------
+      .addCase(profile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.message = null;
+      })
+      .addCase(profile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentUser = action.payload.user as User;
+        state.message = JSON.parse(JSON.stringify(action.payload)).message;
+        if (state.message) {
+          toast.success(state.message);
+        }
+        state.error = JSON.parse(JSON.stringify(action.payload)).error;
+        if (state.error) {
+          toast.error(state.error);
+        }
+      })
+      .addCase(profile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = JSON.parse(JSON.stringify(action.payload)).error;
+        if (state.error) {
+          toast.error(state.error);
+        }
       });
   },
 });
@@ -152,6 +181,14 @@ export const logout = createAsyncThunk(
     }
   },
 );
+export const profile = createAsyncThunk('user/profile', async (user: User) => {
+  try {
+    const response = await axios.post(`${env.VITE_API}users/profile`, user);
+    return response.data;
+  } catch (error: any) {
+    return isRejectedWithValue(error.response.data);
+  }
+});
 export const { clearError, showError } = userSlice.actions;
 
 export default userSlice.reducer;

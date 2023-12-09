@@ -30,12 +30,30 @@ export const encodeImage = (
   });
 };
 
-export const getBase64 = (file: any) => {
-  return new Promise((resolve) => {
-    let reader = new FileReader();
-    reader.onload = () => {
-      resolve(reader.result);
-      reader.readAsDataURL(file);
-    };
+// export const getBase64 = (file: any) => {
+//   return new Promise((resolve) => {
+//     let reader = new FileReader();
+//     reader.onload = () => {
+//       resolve(reader.result);
+//       reader.readAsDataURL(file);
+//     };
+//   });
+// };
+
+export const getBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
   });
 };
+
+// export const getBase64 = (file: File) => {
+//   const reader = new FileReader();
+//   reader.onload = (e) => {
+//     const base64 = e.target?.result;
+//     return base64;
+//   };
+//   reader.readAsDataURL(file);
+// };

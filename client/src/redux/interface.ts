@@ -6,6 +6,7 @@ export interface User {
   phone?: string | null;
   avatar?: string | null;
   address?: string | null;
+  birthday?: string | null;
 }
 export interface UserState {
   currentUser: User | null;

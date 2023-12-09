@@ -1,8 +1,7 @@
 import express from 'express';
-import { getAuthenticatedUser } from '../controllers/auth.controller';
-import { requiresAuth } from '../middleware/auth';
+import { editprofile } from '../controllers/user.controller';
 
 const router = express.Router();
+router.post('/profile', editprofile);
 
-// router.get('/', requiresAuth, getAuthenticatedUser);
-// router.get('/profile', )
+export default router;

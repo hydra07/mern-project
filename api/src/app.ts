@@ -7,6 +7,7 @@ import session from 'express-session';
 import createHttpError, { isHttpError } from 'http-errors';
 import authRouter from './routers/auth.router';
 import indexRouter from './routers/index.router';
+import userRouter from './routers/user.router';
 import env from './utils/validateEnv';
 const app = express();
 app.use(
@@ -36,6 +37,7 @@ app.use(
 
 app.use('/', indexRouter);
 app.use('/api/users', authRouter);
+app.use('/api/users', userRouter);
 app.use((res, req, next) => {
   next(createHttpError(404, 'Not found'));
 });

@@ -1,38 +1,70 @@
-import { useState } from 'react';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from 'firebase/storage';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { getBase64 } from '../utils/image';
-const Profile = () => {
-  const user = useSelector((state: RootState) => state.user.currentUser);
-  const dispatch = useDispatch();
+import { ToastContainer } from 'react-toastify';
+import app from '../firebase';
+import { User } from '../redux/interface';
+import { AppDispatch, RootState } from '../redux/store';
+import { profile } from '../redux/user/userSlice';
 
-  const [editUser, setEditUser] = useState(user);
+const Profile = () => {
+  const user: User = useSelector((state: RootState) => state.user.currentUser!);
+  const dispatch = useDispatch<AppDispatch>();
+  const fileRef = useRef(null);
+
+  const [editUser, setEditUser] = useState<User>(user);
   const [isEditUser, setIsEditUser] = useState(false);
+
+  const [image, setImage] = useState(undefined);
+  const [imagePercent, setImagePercent] = useState(0);
+  const [imageError, setImageError] = useState(false);
 
   const handleEditClick = () => {
     setIsEditUser(true);
   };
 
-  const handleImageChange = (event: any) => {
-    const file = event.target.files[0];
+  const handleFileUpload = async (image: any) => {
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + image.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, image);
 
-    getBase64(file).then((base64) => {
-      setEditUser({ ...editUser, [event.target.avatar]: base64 });
-    });
-    // setEditUser({ ...editUser, avatar: getBase64(file) });
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImagePercent(Math.round(progress));
+      },
+      (error) => {
+        setImageError(true);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setEditUser({ ...editUser, avatar: downloadURL });
+        });
+      },
+    );
   };
-  const handleInputChange = (event: any) => {
-    setEditUser({ ...editUser, [event.target.name]: event.target.value });
+  const handleChange = (event: any) => {
+    setEditUser({ ...editUser, [event.target.id]: event.target.value });
   };
 
   const handleSubmit = (event: any) => {
-    // console.log(user);
-    // event.preventDefault();
-    // dispatch(updateUser(editUser));
+    event.preventDefault();
+    dispatch(profile(editUser));
+    setIsEditUser(false);
   };
-  // useEffect(() => {
-  //   console.log(user);
-  // }, []);
+  useEffect(() => {
+    if (image) {
+      handleFileUpload(image);
+    }
+  }, [image]);
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-3xl font-bold mb-10">Profile</h1>
@@ -59,6 +91,9 @@ const Profile = () => {
               <span className="font-medium">Phone: </span> {user?.phone}
             </p>
             <p>
+              <span className="font-medium">Birthday: </span> {user?.birthday}
+            </p>
+            <p>
               <span className="font-medium">Address: </span> {user?.address}
             </p>
           </div>
@@ -78,12 +113,25 @@ const Profile = () => {
           className="bg-white p-4 rounded shadow w-3/5 h-3/5 flex flex-col relative"
         >
           <div className="flex justify-center -mt-12">
-            <input
-              type="image"
-              name="avatar"
-              alt="User avatar"
+            <img
               src={`data:image/png;base64,${editUser?.avatar}`}
+              alt="User avatar"
               className="w-24 h-24 rounded-full mb-4 content-center shadow-md"
+              // onClick={() => document.getElementById('avatar')?.click()}
+              key={editUser.avatar}
+              onClick={() => fileRef.current.click()}
+            />
+            <input
+              type="file"
+              name="avatar"
+              accept="image/*"
+              // alt="User avatar"
+              id="avatar"
+              // src={`data:image/png;base64,${editUser?.avatar}`}
+              // className="opacity-0 absolute h-0 w-0"
+              hidden
+              ref={fileRef}
+              onChange={(e) => setImage(e.target.files[0])}
             />
           </div>
           <div className="text-center mt-2 mb-5">
@@ -92,7 +140,7 @@ const Profile = () => {
               id="name"
               name="name"
               value={editUser?.name || ''}
-              onChange={handleInputChange}
+              onChange={handleChange}
             />
             <p className="text-lg font-bold mb-2">{user?.email}</p>
           </div>
@@ -108,7 +156,18 @@ const Profile = () => {
                 id="phone"
                 className="ml-5 w-full focus:outline-none"
                 value={editUser?.phone || ''}
-                onChange={handleInputChange}
+                onChange={handleChange}
+              />
+            </label>
+            <label htmlFor="birthday" className="font-medium w-full flex">
+              Birthday:
+              <input
+                type="date"
+                name="birthday"
+                id="birthday"
+                className="ml-5 w-full focus:outline-none"
+                value={editUser?.birthday || ''}
+                onChange={handleChange}
               />
             </label>
             <label htmlFor="address" className="font-medium w-full flex">
@@ -119,7 +178,7 @@ const Profile = () => {
                 id="adress"
                 className="ml-5 w-full focus:outline-none"
                 value={editUser?.address || ''}
-                onChange={handleInputChange}
+                onChange={handleChange}
               />
             </label>
           </div>
@@ -140,6 +199,7 @@ const Profile = () => {
           </div>
         </form>
       )}
+      <ToastContainer />
     </div>
   );
 };

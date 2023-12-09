@@ -12,5 +12,4 @@ router.post('/signup', SignUp);
 router.post('/signin', SignIn);
 router.post('/google', google);
 router.get('/signout', SignOut);
-// router.get('/profile', requiresAuth, getAuthenticatedUser);
 export default router;

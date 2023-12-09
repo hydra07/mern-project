@@ -6,7 +6,7 @@ export interface UserType {
   email: string;
   password: string;
   phone?: string | null;
-  birthday?: Date | null;
+  birthday?: string | null;
   avatar?: string | null;
   address?: string | null;
 }
@@ -28,7 +28,7 @@ const userSchema = new Schema(
       unique: true,
     },
     birthday: {
-      type: Date,
+      type: String,
       required: false,
     },
     email: {
