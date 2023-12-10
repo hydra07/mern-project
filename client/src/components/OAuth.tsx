@@ -1,6 +1,6 @@
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
-import app from '../firebase';
+import app from '../config/firebase';
 import { User } from '../redux/interface';
 import { AppDispatch } from '../redux/store';
 import { google } from '../redux/user/userSlice';

@@ -13,4 +13,5 @@ export interface UserState {
   loading: boolean;
   message: string | null;
   error: string | null;
+  token: string | null;
 }

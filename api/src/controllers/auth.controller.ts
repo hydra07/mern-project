@@ -1,7 +1,9 @@
 import bcrypt from 'bcryptjs';
-import { NextFunction, Request, RequestHandler, Response } from 'express';
+import { RequestHandler } from 'express';
 import createHttpError from 'http-errors';
+import jwt from 'jsonwebtoken';
 import UserModel from '../models/user';
+import env from '../utils/validateEnv';
 import { imageToBase64 } from './../utils/image';
 interface SignUpBody {
   username?: string;
@@ -13,20 +15,20 @@ interface SignInBody {
   username?: string;
   password?: string;
 }
-export const getAuthenticatedUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const user = await UserModel.findById(req.session.userId)
-      // .select('+email +phone +avatar +address')
-      .exec();
-    res.status(200).json(user);
-  } catch (error) {
-    next(error);
-  }
-};
+// export const getAuthenticatedUser = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction,
+// ) => {
+//   try {
+//     const user = await UserModel.findById(req.session.userId)
+//       // .select('+email +phone +avatar +address')
+//       .exec();
+//     res.status(200).json(user);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 export const SignUp: RequestHandler<
   unknown,
@@ -38,6 +40,7 @@ export const SignUp: RequestHandler<
   const email = req.body.email;
   const passwordRaw = req.body.password;
   const phone = req.body.phone;
+
   try {
     if (!username || !email || !passwordRaw || !phone) {
       throw createHttpError(400, 'Parameters missing');
@@ -64,10 +67,14 @@ export const SignUp: RequestHandler<
       phone: phone,
     });
 
-    req.session.userId = newUser._id;
-    res.status(201).json({
+    // req.session.userId = newUser._id;
+    const token = jwt.sign({ id: newUser._id }, env.JWT_SECRET, {
+      expiresIn: '1d',
+    });
+    res.cookie('access_token', token, { httpOnly: true }).status(201).json({
       message: 'Created new user successfully',
       user: newUser,
+      token: token,
     });
   } catch (error) {
     next(error);
@@ -97,24 +104,38 @@ export const SignIn: RequestHandler<
     if (!passwordValid) {
       throw createHttpError(401, 'Wrong password');
     }
-    req.session.userId = user._id;
-    res.status(200).json(user);
+    // req.session.userId = user._id;
+    const token = jwt.sign({ id: user._id }, env.JWT_SECRET);
+    const expiryDate = new Date(Date.now() + 3600000);
+
+    res
+      .cookie('access_token', token, { httpOnly: true, expires: expiryDate })
+      .status(200)
+      .json({
+        message: 'Login successful',
+        // user: user,
+        token: token,
+      });
   } catch (error) {
     next(error);
   }
 };
 
 export const SignOut: RequestHandler = async (req, res, next) => {
-  req.session.destroy((error) => {
-    if (error) {
-      return next(error);
-    } else {
-      // res.sendStatus(200).json({ message: 'Signed out' });
-      res.status(200).json({ message: 'Signed out' });
-    }
-    // res.clearCookie('connect.sid').status(200).json({ message: 'Signed out' });
-  });
+  res.clearCookie('access_token').status(200).json('Signout success!');
+
+  // const cookies = cookieParser;
+  // const count = cookies.length;
+  // console.log('so luong cookie: ', count);
 };
+// req.session.destroy((error) => {
+//   if (error) {
+//     return next(error);
+//   } else {
+//     res.status(200).json({ message: 'Signed out' });
+//   }
+//   // res.clearCookie('connect.sid').status(200).json({ message: 'Signed out' });
+// });
 
 export const google: RequestHandler = async (req, res, next) => {
   const email = req.body.email;
@@ -122,10 +143,14 @@ export const google: RequestHandler = async (req, res, next) => {
   try {
     const user = await UserModel.findOne({ email: email }).exec();
     if (user) {
-      req.session.userId = user._id;
-      res.status(201).json({
+      // req.session.userId = user._id;
+      const token = jwt.sign({ id: user._id }, env.JWT_SECRET, {
+        expiresIn: '1d',
+      });
+      res.cookie('access_token', token, { httpOnly: true }).status(201).json({
         message: 'Login successful  ',
         user: user,
+        token: token,
       });
     } else {
       const existingUsername = await UserModel.findOne({ username: username });
@@ -144,10 +169,16 @@ export const google: RequestHandler = async (req, res, next) => {
         phone: req.body.phone,
         avatar: await imageToBase64(req.body.avatar),
       });
-      req.session.userId = newUser._id;
-      res.status(201).json({
+      // req.session.userId = newUser._id;
+
+      const token = jwt.sign({ id: newUser._id }, env.JWT_SECRET, {
+        expiresIn: '1d',
+      });
+
+      res.cookie('access_token', token, { httpOnly: true }).status(201).json({
         message: 'Created new user successfully',
         user: newUser,
+        token: token,
       });
     }
   } catch (error) {

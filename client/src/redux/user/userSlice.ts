@@ -3,8 +3,9 @@ import {
   createSlice,
   isRejectedWithValue,
 } from '@reduxjs/toolkit';
-import axios from 'axios';
+// import axios from 'axios';
 import { toast } from 'react-toastify';
+import axios from '../../config/axios';
 import env from '../../utils/validateEnv';
 import { User, UserState } from '../interface';
 const initialState: UserState = {
@@ -12,21 +13,13 @@ const initialState: UserState = {
   loading: false,
   message: null,
   error: null,
+  token: null,
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
-    clearError: (state) => {
-      state.error = null;
-    },
-    showError: (state) => {
-      if (state.error) {
-        toast.error(state.error);
-      }
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       //-----------google--------------
@@ -42,6 +35,8 @@ const userSlice = createSlice({
         if (state.message) {
           toast.success(state.message);
         }
+        state.token = action.payload.token;
+        console.log('token', state.token);
       })
       .addCase(google.rejected, (state, action) => {
         state.loading = false;
@@ -63,6 +58,7 @@ const userSlice = createSlice({
         if (state.message) {
           toast.success(state.message);
         }
+        state.token = action.payload.token;
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
@@ -80,6 +76,7 @@ const userSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.currentUser = action.payload as User;
+        state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -98,6 +95,7 @@ const userSlice = createSlice({
         state.loading = false;
         state.currentUser = null;
         state.message = JSON.parse(JSON.stringify(action.payload)).message;
+        state.token = null;
         if (state.message) {
           toast.success(state.message);
         }
@@ -189,6 +187,6 @@ export const profile = createAsyncThunk('user/profile', async (user: User) => {
     return isRejectedWithValue(error.response.data);
   }
 });
-export const { clearError, showError } = userSlice.actions;
+export const {} = userSlice.actions;
 
 export default userSlice.reducer;

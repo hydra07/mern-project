@@ -7,7 +7,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
-import app from '../firebase';
+import app from '../config/firebase';
 import { User } from '../redux/interface';
 import { AppDispatch, RootState } from '../redux/store';
 import { profile } from '../redux/user/userSlice';
@@ -26,6 +26,7 @@ const Profile = () => {
 
   const handleEditClick = () => {
     setIsEditUser(true);
+    console.log(localStorage.getItem('persist:root'));
   };
 
   const handleFileUpload = async (image: any) => {
@@ -119,7 +120,7 @@ const Profile = () => {
               className="w-24 h-24 rounded-full mb-4 content-center shadow-md"
               // onClick={() => document.getElementById('avatar')?.click()}
               key={editUser.avatar}
-              onClick={() => fileRef.current.click()}
+              // onClick={() => fileRef.current.click()}
             />
             <input
               type="file"
@@ -131,7 +132,7 @@ const Profile = () => {
               // className="opacity-0 absolute h-0 w-0"
               hidden
               ref={fileRef}
-              onChange={(e) => setImage(e.target.files[0])}
+              // onChange={(e) => setImage(e.target.files[0])}
             />
           </div>
           <div className="text-center mt-2 mb-5">
@@ -175,7 +176,7 @@ const Profile = () => {
               <input
                 type="text"
                 name="address"
-                id="adress"
+                id="address"
                 className="ml-5 w-full focus:outline-none"
                 value={editUser?.address || ''}
                 onChange={handleChange}

@@ -1,5 +1,6 @@
-import { RequestHandler } from 'express';
+import { NextFunction, RequestHandler, Response } from 'express';
 import createHttpError from 'http-errors';
+import { RequestWithUser } from '../middleware/auth';
 import UserModel from '../models/user';
 interface BodyProfile {
   username: string;
@@ -27,9 +28,6 @@ export const editprofile: RequestHandler<
     if (!user) {
       throw createHttpError(404, 'Error');
     }
-    // if (newName || newPhone || newBirthday || newAddress || newAvatar) {
-    //   throw createHttpError(400, 'Parameters missing');
-    // }
     if (newName !== user.name) {
       user.name = newName;
     }
@@ -61,5 +59,20 @@ export const editprofile: RequestHandler<
     });
   } catch (e) {
     next(e);
+  }
+};
+
+export const getProfile = async (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const user = await UserModel.findById(req.user?.id)
+      .select('+email +phone +avatar +address')
+      .exec();
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
   }
 };
