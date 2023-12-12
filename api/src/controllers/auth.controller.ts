@@ -1,10 +1,10 @@
-import bcrypt from 'bcryptjs';
-import { RequestHandler } from 'express';
-import createHttpError from 'http-errors';
-import jwt from 'jsonwebtoken';
-import UserModel from '../models/user';
-import env from '../utils/validateEnv';
-import { imageToBase64 } from './../utils/image';
+import bcrypt from "bcryptjs";
+import { RequestHandler } from "express";
+import createHttpError from "http-errors";
+import jwt from "jsonwebtoken";
+import UserModel from "../models/user";
+import env from "../utils/validateEnv";
+import { imageToBase64 } from "./../utils/image";
 interface SignUpBody {
   username?: string;
   email?: string;
@@ -15,21 +15,6 @@ interface SignInBody {
   username?: string;
   password?: string;
 }
-// export const getAuthenticatedUser = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction,
-// ) => {
-//   try {
-//     const user = await UserModel.findById(req.session.userId)
-//       // .select('+email +phone +avatar +address')
-//       .exec();
-//     res.status(200).json(user);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 export const SignUp: RequestHandler<
   unknown,
   unknown,
@@ -40,24 +25,23 @@ export const SignUp: RequestHandler<
   const email = req.body.email;
   const passwordRaw = req.body.password;
   const phone = req.body.phone;
-
   try {
     if (!username || !email || !passwordRaw || !phone) {
-      throw createHttpError(400, 'Parameters missing');
+      throw createHttpError(400, "Parameters missing");
     }
     const existingUsername = await UserModel.findOne({
       username: username,
     }).exec();
     if (existingUsername) {
-      throw createHttpError(409, 'Username already exists');
+      throw createHttpError(409, "Username already exists");
     }
     const existingEmail = await UserModel.findOne({ email: email }).exec();
     if (existingEmail) {
-      throw createHttpError(409, 'Email already exists');
+      throw createHttpError(409, "Email already exists");
     }
     const existingPhone = await UserModel.findOne({ phone: phone }).exec();
     if (existingPhone) {
-      throw createHttpError(409, 'Phone already exists');
+      throw createHttpError(409, "Phone already exists");
     }
     const passwordHashed = await bcrypt.hash(passwordRaw, 10);
     const newUser = await UserModel.create({
@@ -69,10 +53,10 @@ export const SignUp: RequestHandler<
 
     // req.session.userId = newUser._id;
     const token = jwt.sign({ id: newUser._id }, env.JWT_SECRET, {
-      expiresIn: '1d',
+      expiresIn: "1d",
     });
-    res.cookie('access_token', token, { httpOnly: true }).status(201).json({
-      message: 'Created new user successfully',
+    res.cookie("access_token", token, { httpOnly: true }).status(201).json({
+      message: "Created new user successfully",
       user: newUser,
       token: token,
     });
@@ -92,27 +76,27 @@ export const SignIn: RequestHandler<
 
   try {
     if (!username || !password) {
-      throw createHttpError(400, 'Parameters missing');
+      throw createHttpError(400, "Parameters missing");
     }
     const user = await UserModel.findOne({ username: username })
-      .select('+password')
+      .select("+password")
       .exec();
     if (!user) {
-      throw createHttpError(401, 'User not found');
+      throw createHttpError(401, "User not found");
     }
     const passwordValid = await bcrypt.compare(password, user.password);
     if (!passwordValid) {
-      throw createHttpError(401, 'Wrong password');
+      throw createHttpError(401, "Wrong password");
     }
     // req.session.userId = user._id;
     const token = jwt.sign({ id: user._id }, env.JWT_SECRET);
     const expiryDate = new Date(Date.now() + 3600000);
 
     res
-      .cookie('access_token', token, { httpOnly: true, expires: expiryDate })
+      .cookie("access_token", token, { httpOnly: true, expires: expiryDate })
       .status(200)
       .json({
-        message: 'Login successful',
+        message: "Login successful",
         // user: user,
         token: token,
       });
@@ -122,33 +106,21 @@ export const SignIn: RequestHandler<
 };
 
 export const SignOut: RequestHandler = async (req, res, next) => {
-  res.clearCookie('access_token').status(200).json('Signout success!');
-
-  // const cookies = cookieParser;
-  // const count = cookies.length;
-  // console.log('so luong cookie: ', count);
+  res.clearCookie("access_token").status(200).json("Signout success!");
 };
-// req.session.destroy((error) => {
-//   if (error) {
-//     return next(error);
-//   } else {
-//     res.status(200).json({ message: 'Signed out' });
-//   }
-//   // res.clearCookie('connect.sid').status(200).json({ message: 'Signed out' });
-// });
-
 export const google: RequestHandler = async (req, res, next) => {
   const email = req.body.email;
-  let username = email.split('@')[0]; // remove @gmail.com from the email
+  let username = email.split("@")[0]; // remove @gmail.com from the email
+  console.log(req.headers.authorization);
   try {
     const user = await UserModel.findOne({ email: email }).exec();
     if (user) {
       // req.session.userId = user._id;
       const token = jwt.sign({ id: user._id }, env.JWT_SECRET, {
-        expiresIn: '1d',
+        expiresIn: "1d",
       });
-      res.cookie('access_token', token, { httpOnly: true }).status(201).json({
-        message: 'Login successful  ',
+      res.cookie("access_token", token, { httpOnly: true }).status(201).json({
+        message: "Login successful  ",
         user: user,
         token: token,
       });
@@ -172,11 +144,11 @@ export const google: RequestHandler = async (req, res, next) => {
       // req.session.userId = newUser._id;
 
       const token = jwt.sign({ id: newUser._id }, env.JWT_SECRET, {
-        expiresIn: '1d',
+        expiresIn: "1d",
       });
 
-      res.cookie('access_token', token, { httpOnly: true }).status(201).json({
-        message: 'Created new user successfully',
+      res.cookie("access_token", token, { httpOnly: true }).status(201).json({
+        message: "Created new user successfully",
         user: newUser,
         token: token,
       });

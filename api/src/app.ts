@@ -1,20 +1,19 @@
 import bodyParser from 'body-parser';
-import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import 'dotenv/config';
 import express, { NextFunction, Request, Response } from 'express';
-import session from 'express-session';
 import createHttpError, { isHttpError } from 'http-errors';
 import authRouter from './routers/auth.router';
 import indexRouter from './routers/index.router';
 import userRouter from './routers/user.router';
-import env from './utils/validateEnv';
 const app = express();
-// app.use(
-//   cors({
-//     origin: '*',
-//   }),
-// );
+app.use(
+  cors({
+    // origin: '*',
+    origin: 'http://localhost:5173',
+  }),
+);
 
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: false }));

@@ -69,9 +69,21 @@ export const getProfile = async (
 ) => {
   try {
     const user = await UserModel.findById(req.user?.id)
-      .select('+email +phone +avatar +address')
+      // .select('-password +email +phone +avatar +address')
       .exec();
-    res.status(200).json(user);
+
+    const returnUser = {
+      username: user?.username,
+      name: user?.name,
+      phone: user?.phone,
+      birthday: user?.birthday,
+      address: user?.address,
+      avatar: user?.avatar,
+    };
+    res.status(200).json({
+      // message: 'Get profile successfully',
+      user: returnUser,
+    });
   } catch (error) {
     next(error);
   }

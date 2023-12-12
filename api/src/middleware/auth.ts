@@ -11,7 +11,7 @@ export const requiresAuth = (
   next: NextFunction,
 ) => {
   const authHeader = req.headers.authorization;
-
+  console.log(authHeader);
   if (!authHeader) {
     return res.status(401).send({ message: 'No token provided.' });
   }
@@ -21,7 +21,6 @@ export const requiresAuth = (
   if (parts.length !== 2) {
     return res.status(401).send({ message: 'Token error.' });
   }
-
   const [scheme, token] = parts;
 
   if (!/^Bearer$/i.test(scheme)) {
