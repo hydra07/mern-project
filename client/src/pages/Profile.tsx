@@ -4,31 +4,45 @@ import {
   ref,
   uploadBytesResumable,
 } from 'firebase/storage';
-import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import app from '../config/firebase';
 import { User } from '../redux/interface';
-import { AppDispatch, RootState } from '../redux/store';
-import { profile } from '../redux/user/userSlice';
+import { AppDispatch } from '../redux/store';
+import { getProfile, profile } from '../redux/user/userSlice';
 
 const Profile = () => {
-  const user: User = useSelector((state: RootState) => state.user.currentUser!);
+  // const user: User = useSelector((state: RootState) => state.user.currentUser!);
   const dispatch = useDispatch<AppDispatch>();
   const fileRef = useRef(null);
 
-  const [editUser, setEditUser] = useState<User>(user);
+  const [user, setUser] = useState<User>();
+  const [editUser, setEditUser] = useState<User>();
   const [isEditUser, setIsEditUser] = useState(false);
-
   const [image, setImage] = useState(undefined);
   const [imagePercent, setImagePercent] = useState(0);
   const [imageError, setImageError] = useState(false);
-
-  const handleEditClick = () => {
-    setIsEditUser(true);
-    console.log(localStorage.getItem('persist:root'));
+  const fetchProfile = async () => {
+    const action = await dispatch(getProfile());
+    const fetchUser = action.payload;
+    setUser(fetchUser.user);
   };
-
+  const handleEditClick = useCallback(() => {
+    setIsEditUser(true);
+  }, []);
+  const handleChange = useCallback((event: any) => {
+    setEditUser({ ...editUser, [event.target.id]: event.target.value });
+  }, []);
+  const handleSubmit = useCallback(
+    async (event: any) => {
+      await event.preventDefault();
+      dispatch(profile(editUser!));
+      await fetchProfile();
+      setIsEditUser(false);
+    },
+    [dispatch, editUser],
+  );
   const handleFileUpload = async (image: any) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + image.name;
@@ -52,20 +66,17 @@ const Profile = () => {
       },
     );
   };
-  const handleChange = (event: any) => {
-    setEditUser({ ...editUser, [event.target.id]: event.target.value });
-  };
-
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    dispatch(profile(editUser));
-    setIsEditUser(false);
-  };
   useEffect(() => {
     if (image) {
       handleFileUpload(image);
     }
   }, [image]);
+  useEffect(() => {
+    fetchProfile();
+  }, [isEditUser, dispatch]);
+  useEffect(() => {
+    setEditUser(user);
+  }, [user]);
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-3xl font-bold mb-10">Profile</h1>
@@ -118,9 +129,8 @@ const Profile = () => {
               src={`data:image/png;base64,${editUser?.avatar}`}
               alt="User avatar"
               className="w-24 h-24 rounded-full mb-4 content-center shadow-md"
-              // onClick={() => document.getElementById('avatar')?.click()}
-              key={editUser.avatar}
-              // onClick={() => fileRef.current.click()}
+              onClick={() => fileRef.current?.click()}
+              key={editUser!.avatar}
             />
             <input
               type="file"
@@ -183,7 +193,7 @@ const Profile = () => {
               />
             </label>
           </div>
-          <div className="mt-auto flex justify-center flex">
+          <div className="mt-auto justify-center flex">
             <button
               type="button"
               className="bg-red-500 text-white px-2 py-1 rounded w-1/3 mx-4 text-bold"

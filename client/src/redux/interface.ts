@@ -9,7 +9,7 @@ export interface User {
   birthday?: string | null;
 }
 export interface UserState {
-  currentUser: User | null;
+  // currentUser: User | null;
   loading: boolean;
   message: string | null;
   error: string | null;

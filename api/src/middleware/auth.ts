@@ -30,8 +30,29 @@ export const requiresAuth = (
   jwt.verify(token, env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).send({ message: 'Invalid token.' });
+    } else {
+      req.user = decoded as JwtPayload & { id: string };
+      next();
     }
-    req.user = decoded as JwtPayload & { id: string };
-    next();
   });
 };
+
+// export const refreshToken = (req: Request, res: Response) => {
+//   const refreshToken = req.headers['x-refresh-token'];
+//   if (!refreshToken) {
+//     return res.status(401).send({ message: 'No token provided.' });
+//   }
+//   jwt.verify(
+//     refreshToken as string,
+//     env.JWT_REFRESH_TOKEN_SECRET,
+//     (err, decoded) => {
+//       if (err) {
+//         return res.status(401).send({ message: 'Invalid token.' });
+//       } else {
+//         const newAccessToken = jwt.sign({ id: decoded.id },env.JWT_SECRET,{
+          
+//         })
+//       }
+//     },
+//   );
+// };

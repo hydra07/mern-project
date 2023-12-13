@@ -4,5 +4,6 @@ export default cleanEnv(process.env, {
   MONGO_URI: str(),
   PORT: port(),
   JWT_SECRET: str(),
+  JWT_REFRESH_TOKEN_SECRET: str(),
   SESSION_SECRET: str(),
 });

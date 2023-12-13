@@ -42,8 +42,14 @@ app.use((res, req, next) => {
   next(createHttpError(404, 'Not found'));
 });
 
+app.use((req, res, next) => {
+  console.log('Cookies: ' + req.cookies);
+  next();
+});
+
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
   // console.error(error);
+
   let errorMessage = 'An unknown error occurred';
   let statusCode = 500;
   if (isHttpError(error)) {
@@ -52,4 +58,5 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
   }
   res.status(statusCode).json({ error: errorMessage });
 });
+
 export default app;

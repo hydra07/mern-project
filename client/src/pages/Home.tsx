@@ -1,7 +1,6 @@
 const Home = () => {
   return (
     <>
-      {/* <Header /> */}
       <div className="bg-gray-400 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Welcome to My Homepage</h1>
@@ -11,6 +10,7 @@ const Home = () => {
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Get Started
           </button>
+          <button className="bg-blue-500 hover:bg">Button</button>
         </div>
       </div>
     </>

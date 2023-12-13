@@ -20,6 +20,7 @@ export const store = configureStore({
     }),
 });
 
+export type Store = typeof store;
 export const persistor = persistStore(store);
 export type Persistor = typeof persistor;
 export type RootState = ReturnType<typeof store.getState>;

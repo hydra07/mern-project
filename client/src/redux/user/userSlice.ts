@@ -1,15 +1,12 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  isRejectedWithValue,
-} from '@reduxjs/toolkit';
-// import axios from 'axios';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import axios from '../../config/axios';
+import axiosInstance from '../../config/axios';
 import env from '../../utils/validateEnv';
 import { User, UserState } from '../interface';
+import { RootState } from '../store';
+
 const initialState: UserState = {
-  currentUser: null,
+  // currentUser: null,
   loading: false,
   message: null,
   error: null,
@@ -30,7 +27,8 @@ const userSlice = createSlice({
       })
       .addCase(google.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentUser = action.payload.user as User;
+        // state.currentUser = action.payload.user as User;
+        // console.log('user', state.currentUser);
         state.message = JSON.parse(JSON.stringify(action.payload)).message;
         if (state.message) {
           toast.success(state.message);
@@ -53,7 +51,7 @@ const userSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentUser = action.payload.user as User;
+        // state.currentUser = action.payload.user as User;
         state.message = JSON.parse(JSON.stringify(action.payload)).message;
         if (state.message) {
           toast.success(state.message);
@@ -75,7 +73,7 @@ const userSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentUser = action.payload as User;
+        // state.currentUser = action.payload as User;
         state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {
@@ -93,7 +91,7 @@ const userSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentUser = null;
+        // state.currentUser = null;
         state.message = JSON.parse(JSON.stringify(action.payload)).message;
         state.token = null;
         if (state.message) {
@@ -115,7 +113,7 @@ const userSlice = createSlice({
       })
       .addCase(profile.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentUser = action.payload.user as User;
+        // state.currentUser = action.payload.user as User;
         state.message = JSON.parse(JSON.stringify(action.payload)).message;
         if (state.message) {
           toast.success(state.message);
@@ -134,11 +132,15 @@ const userSlice = createSlice({
       });
   },
 });
+
 export const google = createAsyncThunk(
   'user/google',
-  async (user: User, { rejectWithValue }) => {
+  async (user: User, thunkAPI) => {
+    const { rejectWithValue, getState } = thunkAPI;
+    const state = getState() as RootState;
     try {
-      const response = await axios.post(`${env.VITE_API}users/google`, user);
+      const axios = axiosInstance(state.user.token as string);
+      const response = await axios.post(`users/google`, user);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -148,8 +150,11 @@ export const google = createAsyncThunk(
 
 export const register = createAsyncThunk(
   'user/register',
-  async (user: User, { rejectWithValue }) => {
+  async (user: User, thunkAPI) => {
+    const { rejectWithValue, getState } = thunkAPI;
+    const state = getState() as RootState;
     try {
+      const axios = axiosInstance(state.user.token as string);
       const response = await axios.post(`${env.VITE_API}users/signup`, user);
       return response.data;
     } catch (error: any) {
@@ -159,8 +164,11 @@ export const register = createAsyncThunk(
 );
 export const login = createAsyncThunk(
   'user/login',
-  async (user: User, { rejectWithValue }) => {
+  async (user: User, thunkAPI) => {
+    const { rejectWithValue, getState } = thunkAPI;
+    const state = getState() as RootState;
     try {
+      const axios = axiosInstance(state.user.token as string);
       const response = await axios.post(`${env.VITE_API}users/signin`, user);
       return response.data;
     } catch (error: any) {
@@ -168,25 +176,46 @@ export const login = createAsyncThunk(
     }
   },
 );
-export const logout = createAsyncThunk(
-  'user/logout',
-  async (_, { rejectWithValue }) => {
+export const logout = createAsyncThunk('user/logout', async (_, thunkAPI) => {
+  const { rejectWithValue, getState } = thunkAPI;
+  const state = getState() as RootState;
+  try {
+    const axios = axiosInstance(state.user.token as string);
+    const response = await axios.get(`${env.VITE_API}users/signout`);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+export const profile = createAsyncThunk(
+  'user/profile',
+  async (user: User, thunkAPI) => {
+    const { rejectWithValue, getState } = thunkAPI;
+    const state = getState() as RootState;
     try {
-      const response = await axios.get(`${env.VITE_API}users/signout`);
+      const axios = axiosInstance(state.user.token as string);
+      const response = await axios.post(`users/profile`, user);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
   },
 );
-export const profile = createAsyncThunk('user/profile', async (user: User) => {
-  try {
-    const response = await axios.post(`${env.VITE_API}users/profile`, user);
-    return response.data;
-  } catch (error: any) {
-    return isRejectedWithValue(error.response.data);
-  }
-});
+export const getProfile = createAsyncThunk(
+  'user/getProfile',
+  async (_, thunkAPI) => {
+    const { rejectWithValue, getState } = thunkAPI;
+    const state = getState() as RootState;
+    try {
+      const axios = axiosInstance(state.user.token as string);
+      const response = await axios.get(`${env.VITE_API}users/profile`);
+      console.log(response.data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
 export const {} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -4,14 +4,29 @@ import {
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
 import { DropdownMenuContent } from '@radix-ui/themes';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { User } from '../redux/interface';
 import { AppDispatch, RootState } from '../redux/store';
-import { logout } from '../redux/user/userSlice';
+import { getProfile, logout } from '../redux/user/userSlice';
 
 const UserButton = () => {
-  const user = useSelector((state: RootState) => state.user.currentUser);
+  // const user = useSelector((state: RootState) => state.user.currentUser);
+  const token = useSelector((state: RootState) => state.user.token);
   const dispatch = useDispatch<AppDispatch>();
+  // const currentUser = dispatch(getProfile());
+  // console.log(currentUser);
+  const [user, setUser] = useState<User>();
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const action = await dispatch(getProfile());
+      const fetchUser = action.payload;
+      setUser(fetchUser.user);
+      // console.log(user);
+    };
+    fetchProfile();
+  }, [dispatch, token]);
 
   return (
     <div className="flex items-center justify-end">
