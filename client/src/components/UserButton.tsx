@@ -12,18 +12,14 @@ import { AppDispatch, RootState } from '../redux/store';
 import { getProfile, logout } from '../redux/user/userSlice';
 
 const UserButton = () => {
-  // const user = useSelector((state: RootState) => state.user.currentUser);
   const token = useSelector((state: RootState) => state.user.token);
   const dispatch = useDispatch<AppDispatch>();
-  // const currentUser = dispatch(getProfile());
-  // console.log(currentUser);
   const [user, setUser] = useState<User>();
   useEffect(() => {
     const fetchProfile = async () => {
       const action = await dispatch(getProfile());
       const fetchUser = action.payload;
       setUser(fetchUser.user);
-      // console.log(user);
     };
     fetchProfile();
   }, [dispatch, token]);
@@ -35,7 +31,8 @@ const UserButton = () => {
           <DropdownMenu>
             <DropdownMenuTrigger className="dropdown-trigger inline-flex items-center focus: outline-none">
               <img
-                src={`data:image/png;base64,${user?.avatar}`}
+                // src={`data:image/png;base64,${user?.avatar}`}
+                src={user?.avatar as string}
                 alt=""
                 className="w-10 h-10 rounded-full mr-4"
               />

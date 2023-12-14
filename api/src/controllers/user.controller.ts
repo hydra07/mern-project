@@ -80,7 +80,6 @@ export const getProfile = async (
       address: user?.address,
       avatar: user?.avatar,
     };
-    console.log(returnUser);
     res.status(200).json({
       // message: 'Get profile successfully',
       user: returnUser,

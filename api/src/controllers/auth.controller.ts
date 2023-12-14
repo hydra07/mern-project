@@ -4,7 +4,6 @@ import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/user';
 import env from '../utils/validateEnv';
-import { imageToBase64 } from './../utils/image';
 interface SignUpBody {
   username?: string;
   email?: string;
@@ -139,7 +138,8 @@ export const google: RequestHandler = async (req, res, next) => {
         email: email,
         password: hashedPassword,
         phone: req.body.phone,
-        avatar: await imageToBase64(req.body.avatar),
+        // avatar: await imageToBase64(req.body.avatar),
+        avatar: req.body.avatar,
       });
       // req.session.userId = newUser._id;
 

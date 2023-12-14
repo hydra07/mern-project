@@ -2,7 +2,7 @@ import axios from 'axios';
 import env from '../utils/validateEnv';
 
 const axiosInstance = (token: string) => {
-  console.log(token);
+  // console.log(token);
   const headers = {
     Authorization: `Bearer ${token}`,
   };

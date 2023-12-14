@@ -209,7 +209,7 @@ export const getProfile = createAsyncThunk(
     try {
       const axios = axiosInstance(state.user.token as string);
       const response = await axios.get(`${env.VITE_API}users/profile`);
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);

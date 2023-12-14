@@ -6,23 +6,23 @@ import {
 } from 'firebase/storage';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import app from '../config/firebase';
 import { User } from '../redux/interface';
 import { AppDispatch } from '../redux/store';
 import { getProfile, profile } from '../redux/user/userSlice';
 
 const Profile = () => {
-  // const user: User = useSelector((state: RootState) => state.user.currentUser!);
   const dispatch = useDispatch<AppDispatch>();
-  const fileRef = useRef(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const [user, setUser] = useState<User>();
   const [editUser, setEditUser] = useState<User>();
   const [isEditUser, setIsEditUser] = useState(false);
-  const [image, setImage] = useState(undefined);
+  const [image, setImage] = useState<File | undefined>(undefined);
   const [imagePercent, setImagePercent] = useState(0);
   const [imageError, setImageError] = useState(false);
+  const [updateComplete, setUpdateComplete] = useState(false);
   const fetchProfile = async () => {
     const action = await dispatch(getProfile());
     const fetchUser = action.payload;
@@ -48,7 +48,6 @@ const Profile = () => {
     const fileName = new Date().getTime() + image.name;
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, image);
-
     uploadTask.on(
       'state_changed',
       (snapshot) => {
@@ -57,6 +56,7 @@ const Profile = () => {
         setImagePercent(Math.round(progress));
       },
       (error) => {
+        // toast.error(error.message);
         setImageError(true);
       },
       () => {
@@ -77,6 +77,18 @@ const Profile = () => {
   useEffect(() => {
     setEditUser(user);
   }, [user]);
+  useEffect(() => {
+    if (imagePercent === 100) {
+      setUpdateComplete(true);
+    }
+  }, [imagePercent]);
+  useEffect(() => {
+    if (imageError) {
+      toast.error(`Image upload failed`);
+    } else if (updateComplete) {
+      toast.success(`Image upload success`);
+    }
+  }, [imageError, updateComplete]);
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-3xl font-bold mb-10">Profile</h1>
@@ -84,7 +96,8 @@ const Profile = () => {
         <div className="bg-white p-4 rounded shadow w-3/5 h-3/5 flex flex-col relative">
           <div className="flex justify-center -mt-12">
             <img
-              src={`data:image/png;base64,${user?.avatar}`}
+              // src={`data:image/png;base64,${user?.avatar}`}
+              src={user?.avatar as string}
               alt="User avatar"
               className="w-24 h-24 rounded-full mb-4 content-center shadow-md"
             />
@@ -125,26 +138,29 @@ const Profile = () => {
           className="bg-white p-4 rounded shadow w-3/5 h-3/5 flex flex-col relative"
         >
           <div className="flex justify-center -mt-12">
-            <img
-              src={`data:image/png;base64,${editUser?.avatar}`}
-              alt="User avatar"
-              className="w-24 h-24 rounded-full mb-4 content-center shadow-md"
-              onClick={() => fileRef.current?.click()}
-              key={editUser!.avatar}
-            />
             <input
               type="file"
               name="avatar"
               accept="image/*"
-              // alt="User avatar"
               id="avatar"
-              // src={`data:image/png;base64,${editUser?.avatar}`}
-              // className="opacity-0 absolute h-0 w-0"
               hidden
               ref={fileRef}
-              // onChange={(e) => setImage(e.target.files[0])}
+              onChange={(event) => {
+                setImage(event.target.files![0]);
+              }}
+            />
+            <img
+              src={editUser?.avatar as string}
+              alt="User avatar"
+              className="w-24 h-24 rounded-full mb-4 content-center shadow-md"
+              onClick={() => fileRef.current?.click()}
             />
           </div>
+          {/* {imagePercent > 0 && imagePercent < 100 && (
+            <div className="progress-bar value-{{ imagePercent }}">
+              <span className="progress-bar-text">Đang tải lên...</span>
+            </div>
+          )} */}
           <div className="text-center mt-2 mb-5">
             <input
               className="text-2xl font-semibold mb-2 text-center focus:outline-none"
