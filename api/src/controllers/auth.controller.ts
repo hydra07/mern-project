@@ -63,7 +63,6 @@ export const SignUp: RequestHandler<
     next(error);
   }
 };
-
 export const SignIn: RequestHandler<
   unknown,
   unknown,
@@ -72,7 +71,6 @@ export const SignIn: RequestHandler<
 > = async (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
-
   try {
     if (!username || !password) {
       throw createHttpError(400, 'Parameters missing');
@@ -110,7 +108,6 @@ export const SignOut: RequestHandler = async (req, res, next) => {
 export const google: RequestHandler = async (req, res, next) => {
   const email = req.body.email;
   let username = email.split('@')[0]; // remove @gmail.com from the email
-  console.log(req.headers.authorization);
   try {
     const user = await UserModel.findOne({ email: email }).exec();
     if (user) {

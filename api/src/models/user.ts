@@ -9,11 +9,16 @@ export interface UserType {
   birthday?: string | null;
   avatar?: string | null;
   address?: string | null;
+  status?: string | null;
+  lastActive?: Date | null;
+  listFriend?: string[] | null;
+  socketId?: string | null;
 }
 export interface UserDocument extends UserType, Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
 const userSchema = new Schema(
   {
     name: {
@@ -56,11 +61,26 @@ const userSchema = new Schema(
       type: String,
       required: false,
     },
+    status: {
+      type: String,
+      required: false,
+    },
+    lastActive: {
+      type: Date,
+      required: false,
+    },
+    listFriend: {
+      type: [Schema.Types.ObjectId],
+      ref: 'User',
+      required: false,
+    },
+    socketId: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true },
 );
 
-// const User = mongoose.model('User', userSchema);
 type User = InferSchemaType<typeof userSchema>;
 export default model<User>('User', userSchema);
-// export type UserType = typeof User;

@@ -8,9 +8,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import app from '../config/firebase';
-import { User } from '../redux/interface';
-import { AppDispatch } from '../redux/store';
-import { getProfile, profile } from '../redux/user/userSlice';
+import { AppDispatch } from '../store';
+import { User } from '../store/interface';
+import { getProfile, profile } from '../store/user/userSlice';
 
 const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,7 +32,10 @@ const Profile = () => {
     setIsEditUser(true);
   }, []);
   const handleChange = useCallback((event: any) => {
-    setEditUser({ ...editUser, [event.target.id]: event.target.value });
+    setEditUser((prevUser) => ({
+      ...prevUser,
+      [event.target.id]: event.target.value,
+    }));
   }, []);
   const handleSubmit = useCallback(
     async (event: any) => {
@@ -43,7 +46,7 @@ const Profile = () => {
     },
     [dispatch, editUser],
   );
-  const handleFileUpload = async (image: any) => {
+  const handleFileUpload = async (image: File) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + image.name;
     const storageRef = ref(storage, fileName);
@@ -55,13 +58,13 @@ const Profile = () => {
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setImagePercent(Math.round(progress));
       },
-      (error) => {
+      () => {
         // toast.error(error.message);
         setImageError(true);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setEditUser({ ...editUser, avatar: downloadURL });
+          setEditUser((prevUser) => ({ ...prevUser, avatar: downloadURL }));
         });
       },
     );
@@ -73,7 +76,7 @@ const Profile = () => {
   }, [image]);
   useEffect(() => {
     fetchProfile();
-  }, [isEditUser, dispatch]);
+  }, [isEditUser]);
   useEffect(() => {
     setEditUser(user);
   }, [user]);

@@ -1,6 +1,6 @@
 import { NextFunction, RequestHandler, Response } from 'express';
 import createHttpError from 'http-errors';
-import { RequestWithUser } from '../middleware/auth';
+import { RequestWithUser } from '../middlewares/auth';
 import UserModel from '../models/user';
 interface BodyProfile {
   username: string;
@@ -52,6 +52,12 @@ export const editprofile: RequestHandler<
     if (newAvatar !== user.avatar) {
       user.avatar = newAvatar;
     }
+    // if (user!.username === 'abcxyzkhong') {
+    //   const _user = await UserModel.findOne({ username: 'hydra07' }).exec();
+    //   if (_user) {
+    //     user!.listFriend?.push(_user._id);
+    //   }
+    // }
     await user.save();
     res.status(200).json({
       message: 'Update profile successfully',

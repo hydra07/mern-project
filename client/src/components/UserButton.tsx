@@ -7,14 +7,15 @@ import { DropdownMenuContent } from '@radix-ui/themes';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { User } from '../redux/interface';
-import { AppDispatch, RootState } from '../redux/store';
-import { getProfile, logout } from '../redux/user/userSlice';
+import { AppDispatch, RootState } from '../store';
+import { User } from '../store/interface';
+import { getProfile, logout } from '../store/user/userSlice';
 
 const UserButton = () => {
   const token = useSelector((state: RootState) => state.user.token);
   const dispatch = useDispatch<AppDispatch>();
   const [user, setUser] = useState<User>();
+
   useEffect(() => {
     const fetchProfile = async () => {
       const action = await dispatch(getProfile());

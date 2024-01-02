@@ -7,7 +7,7 @@ const axiosInstance = (token: string) => {
     Authorization: `Bearer ${token}`,
   };
   const instance = axios.create({
-    baseURL: env.VITE_API,
+    baseURL: env.VITE_API + `/api/`,
     headers: headers,
   });
   return instance;

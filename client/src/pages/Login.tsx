@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import OAuth from '../components/OAuth';
-import { AppDispatch, RootState } from '../redux/store';
-import { login } from '../redux/user/userSlice';
+import { AppDispatch, RootState } from '../store';
+import { login } from '../store/user/userSlice';
 const Login = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -13,7 +13,7 @@ const Login = () => {
   });
   const dispastch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.user.currentUser);
+  const user = useSelector((state: RootState) => state.user.token);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };

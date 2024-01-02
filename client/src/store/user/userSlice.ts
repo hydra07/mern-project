@@ -1,12 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
+import { RootState } from '..';
 import axiosInstance from '../../config/axios';
-import env from '../../utils/validateEnv';
 import { User, UserState } from '../interface';
-import { RootState } from '../store';
 
 const initialState: UserState = {
-  // currentUser: null,
   loading: false,
   message: null,
   error: null,
@@ -155,7 +153,7 @@ export const register = createAsyncThunk(
     const state = getState() as RootState;
     try {
       const axios = axiosInstance(state.user.token as string);
-      const response = await axios.post(`${env.VITE_API}users/signup`, user);
+      const response = await axios.post(`users/signup`, user);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -169,7 +167,7 @@ export const login = createAsyncThunk(
     const state = getState() as RootState;
     try {
       const axios = axiosInstance(state.user.token as string);
-      const response = await axios.post(`${env.VITE_API}users/signin`, user);
+      const response = await axios.post(`users/signin`, user);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -181,7 +179,7 @@ export const logout = createAsyncThunk('user/logout', async (_, thunkAPI) => {
   const state = getState() as RootState;
   try {
     const axios = axiosInstance(state.user.token as string);
-    const response = await axios.get(`${env.VITE_API}users/signout`);
+    const response = await axios.get(`users/signout`);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
@@ -194,7 +192,7 @@ export const profile = createAsyncThunk(
     const state = getState() as RootState;
     try {
       const axios = axiosInstance(state.user.token as string);
-      const response = await axios.post(`users/profile`, user);
+      const response = await axios.post(`/users/profile`, user);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -208,7 +206,7 @@ export const getProfile = createAsyncThunk(
     const state = getState() as RootState;
     try {
       const axios = axiosInstance(state.user.token as string);
-      const response = await axios.get(`${env.VITE_API}users/profile`);
+      const response = await axios.get(`users/profile`);
       // console.log(response.data);
       return response.data;
     } catch (error: any) {

@@ -15,7 +15,7 @@ const Header = () => {
         <nav className="space-x-4">
           <span className="inline-flex">
             <Link to="/" className=" focus:outline-none">
-              {' Home'}
+              {'Home'}
             </Link>
           </span>
           <DropdownMenu>
@@ -34,7 +34,7 @@ const Header = () => {
                 />
               </svg>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="dropdown-content rounded shadow-md bg-black text-white w-[300px] focus: outline-none">
+            <DropdownMenuContent className="dropdown-content shadow-md bg-black text-white w-[300px] focus: outline-none ">
               <DropdownMenuItem
                 className="dropdown-item block py-2 px-4 hover:bg-gray-900 focus: outline-none"
                 onClick={() => (window.location.href = '/')}
